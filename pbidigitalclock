@@ -1,0 +1,255 @@
+{ 
+
+  "$schema": "https://vega.github.io/schema/vega/v5.json", 
+
+  "description": "A simple digital clock visualization showing the current date and time.", 
+
+  "width": 200, 
+
+  "height": 50, 
+
+  "autosize": {"type": "fit", "contains": "padding"}, 
+
+  "signals": [ 
+
+    { 
+
+      "name": "currentDate", 
+
+      "init": "now()", 
+
+      "on": [{"events": {"type": "timer", "throttle": 1000}, "update": "now()"}] 
+
+    }, 
+
+    { 
+
+      "name": "currentYear", 
+
+      "init": "year(currentDate)", 
+
+      "on": [ 
+
+        { 
+
+          "events": {"signal": "currentDate"}, 
+
+          "update": "year(currentDate)" 
+
+        } 
+
+      ] 
+
+    }, 
+
+    { 
+
+      "name": "currentMonth", 
+
+      "init": "month(currentDate)+1", 
+
+      "on": [ 
+
+        { 
+
+          "events": {"signal": "currentDate"}, 
+
+          "update": "month(currentDate)+1" 
+
+        } 
+
+      ] 
+
+    }, 
+
+    { 
+
+      "name": "currentDay", 
+
+      "init": "date(currentDate)", 
+
+      "on": [ 
+
+        { 
+
+          "events": {"signal": "currentDate"}, 
+
+          "update": "date(currentDate)" 
+
+        } 
+
+      ] 
+
+    }, 
+
+    { 
+
+      "name": "currentHour", 
+
+      "init": "hours(currentDate)", 
+
+      "on": [ 
+
+        { 
+
+          "events": {"signal": "currentDate"}, 
+
+          "update": "hours(currentDate)" 
+
+        } 
+
+      ] 
+
+    }, 
+
+    { 
+
+      "name": "currentMinute", 
+
+      "init": "minutes(currentDate)", 
+
+      "on": [ 
+
+        { 
+
+          "events": {"signal": "currentDate"}, 
+
+          "update": "minutes(currentDate)" 
+
+        } 
+
+      ] 
+
+    }, 
+
+    { 
+
+      "name": "currentSecond", 
+
+      "init": "seconds(currentDate)", 
+
+      "on": [ 
+
+        {"events": {"signal": "currentDate"}, "update": "seconds(currentDate)"} 
+
+      ] 
+
+    }, 
+
+    {
+        "name": "currentHour12",
+        "init": "hours(currentDate) % 12 == 0 ? 12 : hours(currentDate) % 12",
+        "on": [
+    {
+      "events": {"signal": "currentDate"},
+      "update": "hours(currentDate) % 12 == 0 ? 12 : hours(currentDate) % 12"
+    }
+      ]
+},
+
+{
+  "name": "ampm",
+  "init": "hours(currentDate) >= 12 ? 'PM' : 'AM'",
+  "on": [
+    {
+      "events": {"signal": "currentDate"},
+      "update": "hours(currentDate) >= 12 ? 'PM' : 'AM'"
+    }
+  ]
+},
+    {
+  "name": "currentMonthName",
+  "init": "timeFormat(currentDate, '%b')",
+  "on": [
+    {
+      "events": {"signal": "currentDate"},
+      "update": "timeFormat(currentDate, '%b')"
+    }
+  ]
+},
+    { 
+
+      "name": "fontSize", 
+
+      "value": 18, 
+
+      "on": [ 
+
+        { 
+
+          "events": {"type": "resize"}, 
+
+          "update": "min(width, height) / 20" 
+
+        } 
+
+      ] 
+
+    } 
+
+  ], 
+
+  "marks": [ 
+
+    { 
+
+      "type": "text", 
+
+      "encode": { 
+
+        "enter": { 
+
+          "x": {"signal": "width / 2"}, 
+
+          "y": {"signal": "height *0.35"}, 
+
+          "align": {"value": "center"}, 
+
+          "baseline": {"value": "middle"}, 
+
+          "limit": {"value": 300}, 
+          "font": {"value": "Segoe UI"},
+          "fontWeight": {"value": 600}  
+
+        }, 
+
+        "update": { 
+
+          "text": { 
+
+            "signal": "format(currentDay, '02') + ' ' +currentMonthName + ' ' +format(currentYear, '04') + ' '"
+
+          }, 
+
+          "fontSize": {"signal": "fontSize"} 
+
+        } 
+
+      } 
+
+    } ,
+
+    {
+    "type": "text",
+    "encode": {
+      "enter": {
+        "x": {"signal": "width / 2"},
+        "y": {"signal": "height * 0.75"},
+        "align": {"value": "center"},
+        "baseline": {"value": "middle"},
+        "font": {"value": "Segoe UI"},
+        "fontWeight": {"value": 600}
+      },
+      "update": {
+        "text": {
+          "signal": "currentHour12 + ':' + format(currentMinute, '02') + ':' + format(currentSecond, '02') + ' ' + ampm"
+        },
+        "fontSize": {"signal": "fontSize"}
+      }
+    }
+  }
+
+
+  ] 
+
+}
