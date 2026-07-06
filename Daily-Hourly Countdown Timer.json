@@ -1,0 +1,99 @@
+{ 
+
+  "$schema": "https://vega.github.io/schema/vega/v5.json", 
+
+  "description": "A simple countdown timer", 
+
+  "width": 300, 
+
+  "height": 60, 
+
+  "autosize": {"type": "fit", "contains": "padding"}, 
+
+  "signals": [ 
+    {
+    "name": "fontSize", 
+    "value": 20, 
+    "on": [ 
+        {"events": {"type": "resize"}, 
+        "update": "min(width, height)/30" } 
+
+      ]
+    },
+    {
+      "name":"DayOffset",
+      "update":"data('dataset')[0]['DayOffSet']"
+    },
+		{
+    "name": "currentDate",
+    "init": "now()",
+    "on": [
+      {"events": {"type": "timer", "throttle": 1000}, "update": "now()"}
+    ]
+  },
+  {
+    "name": "targetDateTime",
+      "update": "datetime(year(currentDate), month(currentDate), date(currentDate) + DayOffset, 15, 0, 0)"
+  },
+  {
+    "name": "countdownMs",
+    "update": "targetDateTime - currentDate"
+  },
+  {
+    "name": "countdownDays",
+  "update": "floor(countdownMs / (1000 * 60 * 60 * 24)) "
+  },
+	{
+  "name": "countdownHours",
+  "update": "floor((countdownMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))"
+  },
+  {
+    "name": "countdownMinutes",
+    "update": "floor((countdownMs % (1000 * 60 * 60)) / (1000 * 60))"
+  },
+  {
+    "name": "countdownSeconds",
+    "update": "floor((countdownMs % (1000 * 60)) / 1000)"
+  },
+  {
+  "name": "expired",
+  "update": "currentDate > targetDateTime"
+}
+  ], 
+
+  "marks": [ 
+
+    { 
+
+      "type": "text", 
+
+      "encode": { 
+
+        "enter": { 
+
+          "x": {"signal": "width / 2"}, 
+
+          "y": {"signal": "height / 2"}, 
+
+          "align": {"value": "center"}, 
+
+          "baseline": {"value": "middle"} 
+
+        }, 
+
+        "update": { 
+
+          "text": {
+				  "signal": "expired ? 'D+2 cut-off has expired 😴' : 'Cut-off in ' + countdownDays + 'd ' + countdownHours + 'h ' + countdownMinutes + 'm ' + countdownSeconds + 's'"
+				},
+        "fontSize": {"signal": "fontSize"} 
+
+        } 
+
+      } 
+
+    } 
+
+  ] 
+
+}
