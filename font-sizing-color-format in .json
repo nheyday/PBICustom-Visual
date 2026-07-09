@@ -1,0 +1,67 @@
+
+-- this part  specify the font, font weight and height, and color
+-- and also formatting the text message to appear in two separate line. Vega does not support auto-wrap.
+
+"marks": [ 
+
+    { 
+
+      "type": "text", 
+
+      "encode": { 
+
+        "enter": { 
+
+          "x": {"signal": "width / 2"}, 
+          "y": {"signal": "height *0.35"}, 
+          "align": {"value": "center"}, 
+          "baseline": {"value": "middle"},
+          "limit": {"value": 100}, 
+          "font": {"value": "Segoe UI"},
+          "fontWeight": {"value": 600},
+          "lineHeight": {"value":34},
+          "fill": {"value":"#FFFFFF"} 
+
+        }, 
+
+        "update": { 
+
+          "text": {
+				  "signal": "expired ? 'D+2 cut-off' : 'Cut-off in '"
+				},
+        "fontSize": {"signal": "fontSize"} 
+
+        } 
+
+      } 
+
+    },
+    { 
+
+      "type": "text", 
+
+      "encode": { 
+
+        "enter": { 
+
+          "x": {"signal": "width / 2"}, 
+          "y": {"signal": "height *0.75"}, 
+          "align": {"value": "center"}, 
+          "baseline": {"value": "middle"},
+          "limit": {"value": 150}, 
+          "font": {"value": "Segoe UI"},
+          "fontWeight": {"value": 600},
+          "fill": {"value":"#FFFFFF"} 
+
+        }, 
+
+        "update": { 
+
+          "text": {
+				  "signal": "expired ? 'has expired 😴' : countdownDays + 'd ' + countdownHours + 'h ' + countdownMinutes + 'm ' + countdownSeconds + 's'"
+				},
+        "fontSize": {"signal": "fontSize"} 
+
+        } 
+
+      } 
